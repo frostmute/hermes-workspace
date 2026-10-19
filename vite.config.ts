@@ -472,6 +472,12 @@ const config = defineConfig(({ mode, command }) => {
       ],
     },
     optimizeDeps: {
+      // ponytail: force re-bundle on every cold start — stale .vite/deps from a
+      // prior pnpm install (immer version hash drift) was poisoning module
+      // resolution through @tailwindcss/node's esm-cache loader. ~3s cold-start
+      // tax; drop the `force: true` once pnpm-lock.yaml churn settles.
+      force: true,
+      include: ['zustand'],
       exclude: [
         'playwright',
         'playwright-core',
